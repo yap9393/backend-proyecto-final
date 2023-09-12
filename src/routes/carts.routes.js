@@ -53,15 +53,12 @@ router.post("/:cid/product/:pid", async (req, res) => {
         if (!cart) {
             return res.status(404).json({ error: "Carrito no encontrado" });
         }
-
         // Obtener el producto con el ID proporcionado
         const products = await productsService.getProducts(); 
         const product = products.find((product) => product.id === parseInt(pid));
-
         if (!product) {
             return res.status(404).json({ error: "Producto no encontrado" });
         }
-
         const productToAdd = cart.products.find((product) => product.product === parseInt(pid)); // buscar el producto en el carrito
         if (productToAdd) {
             // si ya existe en el carrito incrementar la cantidad

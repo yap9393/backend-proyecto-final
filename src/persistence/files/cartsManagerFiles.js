@@ -31,20 +31,18 @@ export class CartsManagerFiles {
         const data = JSON.stringify(this.products, null, 2);
         await fs.promises.writeFile(this.path, data, 'utf8');
     }
+    
     async saveCart(cart) {
         try {
             if (this.fileExists()) {
                 const contenidoString = await fs.promises.readFile(this.path, 'utf-8');
                 const carts = JSON.parse(contenidoString);
-    
                 const existingCartIndex = carts.findIndex(existingCart => existingCart.id === cart.id);
-    
                 if (existingCartIndex !== -1) {
                     carts[existingCartIndex] = cart;
                 } else {
                     carts.push(cart);
                 }
-    
                 await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
             } else {
                 throw new Error('No se pudo guardar el carrito. El archivo no existe.');
@@ -91,6 +89,7 @@ export class CartsManagerFiles {
         } catch (error) {
         }
      }
+
      async createCart() {
         try {
          if(this.fileExists()){
