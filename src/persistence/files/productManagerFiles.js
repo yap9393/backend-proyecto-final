@@ -31,10 +31,12 @@ export  class ProductsManagerFiles {
         const { title, description, price, thumbnail, code, status, stock } = product;
         if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
             console.log("Todos los campos son obligatorios.");
+            throw new Error("Todos los campos son obligatorios.");
             return;
         }
         if (this.products.some(existingProduct => existingProduct.code === code)) {
             console.log("El código ya está en uso.");
+            throw new Error("El código ya está en uso.");
             return;
         }
         const newProduct = {
@@ -128,6 +130,27 @@ export  class ProductsManagerFiles {
             console.log("Producto eliminado:", deletedProduct);
         } else {
             console.log('Producto no encontrado.');
+        }
+    }
+
+    async createProducts(productInfo){
+        try {
+           if(this.fileExists()){
+            const contenidoString=await fs.promises.readFile(this.path, 'utf-8');
+            const products=JSON.parse(contenidoString);
+            let newId=1;
+            if(products.length>0){
+                newId=products[products.length-1].id+1
+            }
+            productInfo.id=newId;
+            products.push(productInfo);
+            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
+            return 'producto agregado'
+        }else {
+            throw new Error('no se pudieron obtener los productos')
+        }  
+        } catch (error) {
+            throw error
         }
     }
 }

@@ -1,14 +1,31 @@
 import { Router } from "express";
 import { productsService } from "../persistence/index.js";
-
+import { uploader } from "../utils.js";
 
 const router = Router();
+
+//middleware de router
+// router.use(function (req,res,next){
+//     console.log('peticion de router products recibida.')
+//     next();
+// })
+
+//middleware de endpoint: (luego utilizo la funcion IsAdmin en cada ruta despues de la ruta ej router.post("/",IsAdmin,async...))
+// const userRole='admin'
+// const IsAdmin = (req,res,next)=>{
+//     if(userRole==='user'){
+//         res.send('no tienes permisos')
+//     }else{
+//         next()
+//     }
+// }
 
 //le doy el endpoint http://localhost:8080/api/products
 router.get("/", async (req, res) => {
     try {
         const products = await productsService.getProducts(); 
         res.json({ data: products });
+        // res.render('home',products)
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -26,16 +43,21 @@ router.get("/:pid", async (req, res) => {
 
 });
 
-//agrega productos con post, pasados en el body
-router.post("/", async (req, res) => {
+
+router.post("/", uploader.single('file'), async (req, res) => {
     try {
         const productInfo = req.body;
+        const thumbnailFilename = req.file.filename; // Nombre del archivo de la imagen cargada por multer NOMBRE DE ARCHIVO
+        // const thumbnailFilename = req.file.destination; // Nombre del archivo de la imagen cargada por multer DESTINO
+        productInfo.thumbnail = thumbnailFilename; // Establece el nombre de archivo como el thumbnail
         const newProductMade = await productsService.addProduct(productInfo);
         res.json({ message: "Producto creado", data: newProductMade });
+        console.log('req.file:'+req.file)
     } catch (error) {
-        res.json({ status: "error", message: error.message });
+        res.status(400).json({ status: "error", message: error.message });
     }
 });
+
 
 // actualiza un producto por su ID
 router.put("/:pid", async (req, res) => {

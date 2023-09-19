@@ -18,5 +18,33 @@
     "code": "abc2",
     "status": true,
     "stock": 25
+  },
+  {
+    "id": 3,
+    "title": "prodct3",
+    "description": "fsddsfsd",
+    "price": "232",
+    "thumbnail": "asdsa",
+    "code": "abc3",
+    "status": true,
+    "stock": "3"
+  },
+  {
+    "title": "producto prueba 4",
+    "description": "p4",
+    "price": "400",
+    "code": "abc4",
+    "stock": "4",
+    "thumbnail": "url",
+    "id": 4
+  },
+  {
+    "title": "Producto 5",
+    "description": "p5",
+    "price": "500",
+    "code": "abc5",
+    "stock": "5",
+    "thumbnail": "url",
+    "id": 5
   }
 ]
