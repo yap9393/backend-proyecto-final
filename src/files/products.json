@@ -39,12 +39,12 @@
     "id": 4
   },
   {
-    "title": "Producto 5",
+    "title": "producto prueba 5",
     "description": "p5",
-    "price": "500",
+    "price": "5",
     "code": "abc5",
     "stock": "5",
-    "thumbnail": "url",
+    "thumbnail": "img5",
     "id": 5
   }
 ]
