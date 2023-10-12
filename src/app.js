@@ -8,7 +8,11 @@ import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
 import { productsService } from "./dao/index.js";
 import { connectDB } from "./config/dbConnection.js";
-// import chatRouter from "./routes/chat.routes.js";
+import chatRouter from "./routes/chat.routes.js";
+import { productsModel } from "./dao/mongo/models/products.model.js";
+// import { chatService } from "./dao/index.js";
+
+import mongoose from "mongoose";
 
 const port = 8080;
 const app = express()
@@ -26,7 +30,14 @@ const io = new Server(httpServer)
 app.use('/static', express.static(path.join(__dirname, '/public')))
 
 //configuracion del motor de plantillas handlebars
-app.engine('.hbs', engine({ extname: '.hbs' }));
+app.engine('.hbs', engine({ extname: '.hbs'
+//esto es la otra opcion a poner .lean() para obtener los productos del carrito)
+// , runtimeOptions: { 
+//     allowProtoMethodsByDefault: true,
+//     allowProtoPropertiesByDefault: true,
+// },
+}));
+
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, './views'));
 
@@ -37,7 +48,8 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 // app.use('/api/chat', chatRouter);
 
-const chat=[]
+// const chat=[]
+
 //socket server
 io.on('connection', async (socket) => {
     console.log('cliente conectado');
@@ -47,32 +59,23 @@ io.on('connection', async (socket) => {
      //recibir lo enviado por el socket del cliente
      socket.on("addProduct", async (productData) => {
 
-        const result = await productsService.createProducts(productData);
+        const result = await productsService.createProduct(productData);
         const products = await productsService.getProducts();
         io.emit('productsArray', products)
     })
 
     // manejar la solicitud para eliminar un producto
     socket.on('deleteProduct', async (productId) => {
-        const deletedProductId = await productsService.deleteProduct(productId);
-        if (deletedProductId) {
-            io.emit('productDeleted', deletedProductId);
+        try {
+            await productsService.deleteProduct(productId);
+            const updatedProducts = await productsService.getProducts();
+            socket.emit('productsArray', updatedProducts);
+        } catch (error) {
+            console.error('Error al eliminar un producto:', error.message);
         }
     });
-    //chat -->
-     //historial
-     socket.emit('chatHistory', chat) //cuando el usuario se conecta recibe todo el historial 
-     //recibimos cada mensaje
-     socket.on('msgChat',(data)=>{
-         chat.push(data);
-         //enviamos el historial del chat a los usuarios conectados.
-         io.emit('chatHistory', chat)
-     })
-     //recibimos mensaje de conexion de nuevo cliente:
-     socket.on('authenticated', (data)=>{
-         socket.broadcast.emit('newUser',`el usuario ${data} se acaba de conectar`)
-     })
 });
 
 // conexion base de datos
 connectDB();
+

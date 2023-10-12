@@ -1,0 +1,23 @@
+<h1>Productos</h1>
+<div class="productsContainer">
+    {{#each payload}}
+    <div class="product-list">
+        <div class="product-card">
+            <div class="product-details">
+                <h3>{{this.title}}</h3>
+                <p>{{this.category}}</p>
+                <p>{{this.description}}</p>
+                <p><strong>Precio:</strong> ${{this.price}}</p>
+                <p><strong>Stock:</strong> {{this.stock}}</p>
+                <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+<div class="prevNextCont">
+    {{#if prevLink}}<a href="{{prevLink}}">Anterior</a>{{/if}}
+    {{#if nextLink}}<a href="{{nextLink}}">Siguiente</a>{{/if}}
+</div>
+
+<script src="/static/js/products.js"></script>

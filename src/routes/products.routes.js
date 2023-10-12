@@ -53,7 +53,7 @@ router.put("/:pid", async (req, res) => {
 // elimina un producto por su ID
 router.delete("/:pid", async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid);
+        const productId =req.params.pid;
         await productsService.deleteProduct(productId);
         res.json({ message: "Producto eliminado con éxito" });
     } catch (error) {

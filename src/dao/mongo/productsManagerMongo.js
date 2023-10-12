@@ -25,7 +25,16 @@ export class ProductsManagerMongo {
             throw new Error('No se pudo obtener el listado de productos.')
         }
     };
-
+    
+    async getProductsPaginate(query,options) {
+        try {
+            const result = await this.model.paginate(query, options);
+            return result;
+        } catch (error) {
+            console.log("getProducts", error.message)
+            throw new Error('No se pudo obtener el listado de productos.')
+        }
+    };
     async getProductById(productId) {
         try {
             const result = await this.model.findById(productId)
@@ -34,7 +43,7 @@ export class ProductsManagerMongo {
             console.log("getProductById", error.message)
             throw new Error('No se pudo obtener ese producto')
         }
-    };
+    }; 
 
     async updateProduct(productId, newProductInfo) {
         try {
@@ -52,6 +61,7 @@ export class ProductsManagerMongo {
     async deleteProduct(productId) {
         try {
             const result = await this.model.findByIdAndDelete(productId)
+            console.log("el id obtenido es:"+productId)
             if (!result) {
                 throw new Error('No se pudo encontrar el product a eliminar')
             }

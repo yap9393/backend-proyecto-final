@@ -2,6 +2,7 @@
 .nav-bar {
     background-color: rgb(196, 196, 196);
     padding: 10px;
+    text-align: center;
 }
 
 .nav-bar a {
@@ -12,7 +13,8 @@
 
 /* titulos */
 h1, h2 {
-    color: rgb(0, 0, 0); 
+    color: rgb(0, 0, 0);
+    text-align: center; 
 }
 
 /* formulario */
@@ -82,7 +84,7 @@ ul li {
 .delete-button:hover {
     background-color: #e60000;
 }
-
+ 
 .chatPanel {
     max-height: 300px;
     overflow-y: auto;
@@ -91,3 +93,14 @@ ul li {
     background-color: #d2d2d2;
     margin-bottom: 5%;
   }
+
+  .productsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+ .prevNextCont{
+    text-align: center;
+    margin-bottom: 20px;
+ }

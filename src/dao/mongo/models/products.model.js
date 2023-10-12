@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const productsCollection='products'
 
@@ -23,7 +24,8 @@ const productSchema= new mongoose.Schema({
     category:{
         type:String,
         required:true,
-        enum:["Ski","Snowboard"]//con esto indico ESPECIFICAMENTE que valores puede tomar categoria
+        enum:["Ski","Snowboard"],//con esto indico ESPECIFICAMENTE que valores puede tomar categoria
+        index:true
     },
     stock:{
         type:Number,
@@ -35,5 +37,6 @@ const productSchema= new mongoose.Schema({
     },
 
 })
+productSchema.plugin(mongoosePaginate);
 
 export const productsModel = mongoose.model(productsCollection, productSchema);

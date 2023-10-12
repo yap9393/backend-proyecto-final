@@ -31,11 +31,13 @@ const updateProductList = (products) => {
             `<div class="product-card">
                 <div class="product-details">
                     <h3>${product.title}</h3>
+                    <p>${product.category}<p>
                     <p>${product.description}</p>
                     <p><strong>Precio:</strong> $${product.price}</p>
                     <p><strong>Stock:</strong> ${product.stock}</p>
+                    <p>id:${product._id}</p>
                 </div>
-                <button class="delete-button" onClick='deleteProduct("${product.id}")'>Eliminar</button>
+                <button class="delete-button" onClick='deleteProduct("${product._id}")'>Eliminar</button>
             </div>`;
     });
 
@@ -44,7 +46,7 @@ const updateProductList = (products) => {
 
 // eliminar un producto por su ID
 const deleteProduct = (productId) => {
-    socketClient.emit('deleteProduct', parseInt(productId));
+    socketClient.emit('deleteProduct', productId);
 };
 
 // escuchar la respuesta del servidor despues de eliminar un producto
