@@ -1,6 +1,11 @@
 <h1>Productos</h1>
+
+{{#if userEmail}}
+    <p>Bienvenido {{userEmail}}, role: {{userRole}}</p>
+    {{/if}}
 <div class="productsContainer">
-    {{#each payload}}
+    
+    {{#each dataProducts.payload}}
     <div class="product-list">
         <div class="product-card">
             <div class="product-details">
@@ -9,15 +14,15 @@
                 <p>{{this.description}}</p>
                 <p><strong>Precio:</strong> ${{this.price}}</p>
                 <p><strong>Stock:</strong> {{this.stock}}</p>
-                <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
+                <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
             </div>
         </div>
     </div>
     {{/each}}
 </div>
 <div class="prevNextCont">
-    {{#if prevLink}}<a href="{{prevLink}}">Anterior</a>{{/if}}
-    {{#if nextLink}}<a href="{{nextLink}}">Siguiente</a>{{/if}}
+    {{#if dataProducts.prevLink}}<a href="{{dataProducts.prevLink}}">Anterior</a>{{/if}}
+    {{#if dataProducts.nextLink}}<a href="{{dataProducts.nextLink}}">Siguiente</a>{{/if}}
 </div>
 
 <script src="/static/js/products.js"></script>

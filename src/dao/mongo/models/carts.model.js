@@ -13,7 +13,8 @@ const cartsSchema=new mongoose.Schema({
                 quantity:{
                     type:Number,
                     required:true
-                }
+                },
+                _id:false
             }
         ],
         default:[]

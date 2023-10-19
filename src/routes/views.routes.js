@@ -3,11 +3,13 @@ import { productsService } from "../dao/index.js";
 import { cartsService } from "../dao/index.js";
 
 const router = Router();
-router.get('/', async (req,res)=>{
-    res.render('home')
-})
+
+router.get('/', async (req, res) => {
+    res.redirect('/login');
+});
+
 router.get('/products', async (req, res) => {
-    const { limit = 10, page = 1, sort="none" } = req.query;
+    const { limit = 10, page = 1, sort = "none" } = req.query;
     const query = {};
     if (req.query.category) {
         query.category = req.query.category;
@@ -17,13 +19,19 @@ router.get('/products', async (req, res) => {
         page,
         lean: true,
     };
-    
+  
     if (sort === 'asc') {
-        options.sort = { price: 1 }; 
+        options.sort = { price: 1 };
     } else if (sort === 'desc') {
         options.sort = { price: -1 };
     }
- 
+    
+    let userEmail = null; // valor predeterminado es nulo
+    let userRole=null;
+    if (req.session.email) {
+        userEmail = req.session.email;
+        userRole=req.session.role;
+    }
     const result = await productsService.getProductsPaginate(query, options);
     const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
     const dataProducts = {
@@ -39,9 +47,10 @@ router.get('/products', async (req, res) => {
         nextLink: result.hasNextPage ? baseUrl.includes("page") ?
             baseUrl.replace(`page=${result.page}`, `page=${result.nextPage}`) : baseUrl.concat(`?page=${result.nextPage}`) : null
     }
-    res.render('products', dataProducts);
+    
+    res.render('products', { dataProducts, userEmail, userRole });
 });
-
+ 
 router.get('/realtimeproducts', (req, res) => {
     res.render('realTimeProducts');
 });
@@ -60,5 +69,27 @@ router.get('/cart', async (req, res) => {
     }
 });
 
+//vistas de session
+router.get('/profile', async (req, res) => {
+    if (req.session.email) {
+        const userEmail = req.session.email;
+        const userRole=req.session.role;
+        res.render('profileView', { userEmail, userRole});
+    }else{
+       res.redirect('/login')  
+    }
+});
+
+router.get('/login', async (req, res) => {
+    if (req.session.email) {
+        res.redirect('/profile');
+    } else {
+        res.render('loginView');
+    }
+});
+
+router.get('/signup', async (req, res) => {
+    res.render('signUpView');
+});
 
 export { router as viewsRouter }
