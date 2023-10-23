@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import { config } from './config.js';
 
 export const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb+srv://yap1993:VzyqidXjZVTMtjK7@cluster0.dq2dywq.mongodb.net/ecommerce?retryWrites=true&w=majority')
+        await mongoose.connect(config.mongo.url)
         console.log('base de datos conectada exitosamente')
     } catch (error) {
         console.log(`error al conectar la base de datos ${error.message}`)

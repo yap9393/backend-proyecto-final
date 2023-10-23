@@ -15,6 +15,9 @@ import { usersRouter } from "./routes/users.routes.js";
 import session from 'express-session'
 import { sessionsRouter } from "./routes/session.routes.js";
 import MongoStore from 'connect-mongo'
+import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
+import { config } from "./config/config.js";
 // import { chatService } from "./dao/index.js";
 
 import mongoose from "mongoose";
@@ -31,31 +34,21 @@ app.use(cookieParser('claveCookies')) //cookies
 app.use(session({
     store:MongoStore.create({
         ttl:3000,
-        mongoUrl:'mongodb+srv://yap1993:VzyqidXjZVTMtjK7@cluster0.dq2dywq.mongodb.net/ecommerce?retryWrites=true&w=majority',
+        mongoUrl:config.mongo.url
     }),
-    secret:'claveProyectoCoder',
+    secret:config.server.secretSession,
     resave:true,
     saveUninitialized:true
 }))
 
-// app.get('/login', (req,res)=>{
-//     const {name}=req.query;
-//     req.session.user=name;
-//     res.send('login y sesion creada en archivos.')
-// })
-
-// app.get('/profile',(req,res)=>{
-//     if(req.session.user){
-//         res.send(`bienvenido ${req.session.user}`)
-//     }else{
-//         res.send('debes iniciar sesion')
-//     }
-// })
 
 //servidor
 const httpServer = app.listen(port, () => console.log(`servidor ejecutandose en el puerto ${port}`))
 
-
+//configurar passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 //servidor de websocket
 const io = new Server(httpServer)
@@ -82,9 +75,6 @@ app.use("/api/carts", cartsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/sessions', sessionsRouter)
 
-// app.use('/api/chat', chatRouter);
-
-// const chat=[]
 
 //socket server
 io.on('connection', async (socket) => {
@@ -111,6 +101,8 @@ io.on('connection', async (socket) => {
         }
     });
 });
+
+
 
 // conexion base de datos
 connectDB();

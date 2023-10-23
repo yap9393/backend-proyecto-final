@@ -28,9 +28,9 @@ router.get('/products', async (req, res) => {
     
     let userEmail = null; // valor predeterminado es nulo
     let userRole=null;
-    if (req.session.email) {
-        userEmail = req.session.email;
-        userRole=req.session.role;
+    if (req.user?.email) {
+        userEmail = req.user.email;
+        userRole=req.user.role;
     }
     const result = await productsService.getProductsPaginate(query, options);
     const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
@@ -70,18 +70,19 @@ router.get('/cart', async (req, res) => {
 });
 
 //vistas de session
-router.get('/profile', async (req, res) => {
-    if (req.session.email) {
-        const userEmail = req.session.email;
-        const userRole=req.session.role;
-        res.render('profileView', { userEmail, userRole});
-    }else{
-       res.redirect('/login')  
+router.get("/profile",(req,res)=>{
+    
+    if(req.user?.email){
+        const userEmail = req.user.email;
+        const userRole=req.user.role;
+        res.render("profileView",{userEmail, userRole});
+    } else {
+        res.redirect("/login");
     }
 });
 
 router.get('/login', async (req, res) => {
-    if (req.session.email) {
+    if (req.user?.email) {
         res.redirect('/profile');
     } else {
         res.render('loginView');
