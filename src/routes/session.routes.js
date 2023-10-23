@@ -1,17 +1,17 @@
 import { Router } from "express";
 import passport from "passport";
-import {config} from "../config/config.js"
+import { config } from "../config/config.js";
 
 const router = Router();
- 
-router.post("/signup", passport.authenticate("signupLocalStrategy",{
-    failureRedirect:"/api/sessions/fail-signup"
-}) , async(req,res)=>{
-    res.render("loginView",{message:"Usuario registrado correctamente"});
-});  
 
-router.get("/fail-signup",(req,res)=>{
-    res.render("signupView",{error:"No se pudo registrar el usuario"});
+router.post("/signup", passport.authenticate("signupLocalStrategy", {
+    failureRedirect: "/api/sessions/fail-signup"
+}), async (req, res) => {
+    res.render("loginView", { message: "Usuario registrado correctamente" });
+});
+
+router.get("/fail-signup", (req, res) => {
+    res.render("signupView", { error: "No se pudo registrar el usuario" });
 });
 
 //Ruta de solicitud registro con github
@@ -20,35 +20,37 @@ router.get("/signup-github", passport.authenticate("signupGithubStrategy"));
 //Ruta de solicitud registro con github
 router.get("/signup-github", passport.authenticate("signupGithubStrategy"));
 //ruta del callback con github
-router.get(config.github.callbackUrl, passport.authenticate("signupGithubStrategy",{
-    failureRedirect:"/api/sessions/fail-signup"
-}), (req,res)=>{
+// router.get(config.github.callbackUrl, passport.authenticate("signupGithubStrategy",{ //por algun motivo, la variable config.github.callbackUrl me agrega la ruta de localhost:8080.... en vez de mostrame solo/github-callback como deberia. Por eso al hacerlo de esta forma me da error. 
+router.get("/github-callback", passport.authenticate("signupGithubStrategy", {
+    failureRedirect: "/api/sessions/fail-signup"
+}), (req, res) => {
     res.redirect("/profile");
+    console.log(config.github.callbackUrl)
 });
 
 //ruta de login
-router.post("/login", passport.authenticate("loginLocalStrategy",{
-    failureRedirect:"/api/sessions/fail-login"
-}) , async(req,res)=>{
+router.post("/login", passport.authenticate("loginLocalStrategy", {
+    failureRedirect: "/api/sessions/fail-login"
+}), async (req, res) => {
     res.redirect("/profile");
 });
 
-router.get("/fail-login",(req,res)=>{
-    res.render("loginView",{error:"No se pudo iniciar sesion para este usuario"});
+router.get("/fail-login", (req, res) => {
+    res.render("loginView", { error: "No se pudo iniciar sesion para este usuario" });
 });
 
-router.get("/logout", async(req,res)=>{
+router.get("/logout", async (req, res) => {
     try {
-        req.session.destroy(err=>{
-            if(err) return res.render("profileView",{error:"No se pudo cerrar la sesion"});
+        req.session.destroy(err => {
+            if (err) return res.render("profileView", { error: "No se pudo cerrar la sesion" });
             res.redirect("/");
         })
     } catch (error) {
-        res.render("signupView",{error:"No se pudo registrar el usuario"});
+        res.render("signupView", { error: "No se pudo registrar el usuario" });
     }
 });
 
-export {router as sessionsRouter};
+export { router as sessionsRouter };
 
 
 //version del router.post anterior a la implementacion de passport, q verifica admin antes de continuar
