@@ -18,6 +18,7 @@ import MongoStore from 'connect-mongo'
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { config } from "./config/config.js";
+import { generateToken, validateToken } from "./utils.js";
 // import { chatService } from "./dao/index.js";
 
 import mongoose from "mongoose";
@@ -25,10 +26,38 @@ import mongoose from "mongoose";
 const port = 8080;
 const app = express()
 
+//servidor
+const httpServer = app.listen(port, () => console.log(`servidor ejecutandose en el puerto ${port}`))
+
 //middlewares
-app.use(express.json()); //primer middleware para convertir lo del body a json, tb conocido como middleware de aplicacion, se ejcuta en toda mi aplicacion.
+app.use(express.json()); //  convertir lo del body a json, tb conocido como middleware de aplicacion, se ejcuta en toda mi aplicacion.
 app.use(express.urlencoded({ extended: true }));  //me permite recibir inputs de formularios y q los comprenda como json
-app.use(cookieParser('claveCookies')) //cookies
+// app.use(cookieParser('claveCookies')) //cookies
+
+
+//jsntoken
+
+// app.get("/login", (req,res)=>{
+//     const user = req.body;
+//     const token = generateToken(user);
+//     res.json({status:"success", accessToken:token});
+// });
+
+// app.get("/profile", validateToken , (req,res)=>{
+//     res.json({result:req.user});
+// });
+
+//configuracion del motor de plantillas handlebars
+app.engine('.hbs', engine({ extname: '.hbs'
+//esto es la otra opcion a poner .lean() para obtener los productos del carrito)
+// , runtimeOptions: { 
+//     allowProtoMethodsByDefault: true,
+//     allowProtoPropertiesByDefault: true,
+// },
+}));
+app.set('view engine', '.hbs');
+app.set('views', path.join(__dirname, './views'));
+
 
 //session
 app.use(session({
@@ -41,10 +70,6 @@ app.use(session({
     saveUninitialized:true
 }))
 
-
-//servidor
-const httpServer = app.listen(port, () => console.log(`servidor ejecutandose en el puerto ${port}`))
-
 //configurar passport
 initializePassport();
 app.use(passport.initialize());
@@ -55,17 +80,6 @@ const io = new Server(httpServer)
 
 //carpeta public 
 app.use('/static', express.static(path.join(__dirname, '/public')))
-
-//configuracion del motor de plantillas handlebars
-app.engine('.hbs', engine({ extname: '.hbs'
-//esto es la otra opcion a poner .lean() para obtener los productos del carrito)
-// , runtimeOptions: { 
-//     allowProtoMethodsByDefault: true,
-//     allowProtoPropertiesByDefault: true,
-// },
-}));
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, './views'));
 
 
 //rutas

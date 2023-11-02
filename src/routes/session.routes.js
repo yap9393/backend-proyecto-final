@@ -26,7 +26,7 @@ router.get("/github-callback", passport.authenticate("signupGithubStrategy", {
 }), (req, res) => {
     res.redirect("/profile");
     console.log(config.github.callbackUrl)
-});
+}); 
 
 //ruta de login
 router.post("/login", passport.authenticate("loginLocalStrategy", {

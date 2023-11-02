@@ -4,6 +4,7 @@ import { createHash, inValidPassword } from '../utils.js';
 import { usersModel } from '../dao/mongo/models/users.model.js';
 import { config } from './config.js';
 import GithubStrategy from "passport-github2"
+import { usersService } from '../dao/index.js';
 
 //localStrategy: username y password
 export const initializePassport = ()=>{
@@ -14,9 +15,9 @@ export const initializePassport = ()=>{
             usernameField:"email", //ahora el campo username es igual al campo email
         },
         async (req,username,password,done)=>{
-            const {first_name} = req.body;
+            const {first_name, last_name, age} = req.body;
             try {
-                const user = await usersModel.findOne({email:username});
+                const user = await usersService.getUserByEmail(username);
                 if(user){
                     //el usuario ya esta registrado
                     return done(null,false);
@@ -24,11 +25,13 @@ export const initializePassport = ()=>{
                 //El usuario no esta registrado
                 const newUser = {
                     first_name,
+                    last_name,
+                    age,
                     email:username,
                     password:createHash(password)
                 };
                 console.log(newUser);
-                const userCreated = await usersModel.create(newUser);
+                const userCreated = await usersService.createUser(newUser);
                 return done(null,userCreated);
             } catch (error) {
                 return done(error);
@@ -43,7 +46,7 @@ export const initializePassport = ()=>{
         },
         async (username,password,done)=>{
             try {
-                const user = await usersModel.findOne({email:username});
+                const user = await usersService.getUserByEmail(username);
                 if(!user){
                     //el usuario no esta registrado
                     return done(null,false);
@@ -95,7 +98,7 @@ export const initializePassport = ()=>{
     });
 
     passport.deserializeUser(async(id,done)=>{
-        const user = await usersModel.findById(id);
+        const user = await usersService.getUserById(id);
         done(null,user);//req.user = informacion del usuario que traemos de la base de datos
     });
 };

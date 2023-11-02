@@ -8,6 +8,10 @@ router.get('/', async (req, res) => {
     res.redirect('/login');
 });
 
+// router.get('*', async(req,res)=>{
+//     res.status(404).send('cannot get the specific route')
+// });
+
 router.get('/products', async (req, res) => {
     const { limit = 10, page = 1, sort = "none" } = req.query;
     const query = {};
@@ -75,7 +79,8 @@ router.get("/profile",(req,res)=>{
     if(req.user?.email){
         const userEmail = req.user.email;
         const userRole=req.user.role;
-        res.render("profileView",{userEmail, userRole});
+        const userName=req.user.first_name
+        res.render("profileView",{userEmail, userRole,userName});
     } else {
         res.redirect("/login");
     }
