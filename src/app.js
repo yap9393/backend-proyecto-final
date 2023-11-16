@@ -6,7 +6,7 @@ import { __dirname } from "./utils.js";
 import path from 'path'
 import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
-import { productsService } from "./dao/index.js";
+import { ProductsService } from "./services/products.service.js";
 import { connectDB } from "./config/dbConnection.js";
 import chatRouter from "./routes/chat.routes.js";
 import { productsModel } from "./dao/mongo/models/products.model.js";
@@ -93,30 +93,28 @@ app.use('/api/sessions', sessionsRouter)
 //socket server
 io.on('connection', async (socket) => {
     console.log('cliente conectado');
-    const products = await productsService.getProducts();
+    const products = await ProductsService.getProducts();
     socket.emit('productsArray', products)
 
      //recibir lo enviado por el socket del cliente
      socket.on("addProduct", async (productData) => {
 
-        const result = await productsService.createProduct(productData);
-        const products = await productsService.getProducts();
+        const result = await ProductsService.createProduct(productData);
+        const products = await ProductsService.getProducts();
         io.emit('productsArray', products)
     })
 
     // manejar la solicitud para eliminar un producto
     socket.on('deleteProduct', async (productId) => {
         try {
-            await productsService.deleteProduct(productId);
-            const updatedProducts = await productsService.getProducts();
+            await ProductsService.deleteProduct(productId);
+            const updatedProducts = await ProductsService.getProducts();
             socket.emit('productsArray', updatedProducts);
         } catch (error) {
             console.error('Error al eliminar un producto:', error.message);
         }
     });
 });
-
-
 
 // conexion base de datos
 connectDB();
