@@ -1,4 +1,5 @@
 import { usersModel } from "./models/users.model.js";
+import { CreateUserDto } from "../dto/createUser.dto.js";
 
 export class usersManagerMongo {
     constructor() {
@@ -13,6 +14,22 @@ export class usersManagerMongo {
             throw new Error("Se produjo un error creando el usuario");
         }
     };
+    // async createUsers(userInfo) {
+    //     try {
+    //         const newUserDto = new CreateUserDto(userInfo);
+    //         console.log('Usuario Dto', newUserDto);
+    //         const newUser = await this.model.create(newUserDto); 
+    //           //mensaje interno
+    //           console.log('createUsers con exito');    
+    //         return newUser
+
+    //     } catch (error) {
+    //         console.log('Error en manager createUsers', error.message);
+    //         throw new Error('No se pudo crear el usuario', error.message);
+    //     }
+        
+
+    // }
     async getUserById(userId) {
         try {
             const result = await this.model.findById(userId).lean();

@@ -7,7 +7,7 @@ export class SessionController {
     static signUp = passport.authenticate("signupLocalStrategy", {
         failureRedirect: "/api/sessions/fail-signup"
     });
-
+    
     static failSignUp = (req, res) => {
         res.render("signupView", { error: "No se pudo registrar el usuario" });
     }

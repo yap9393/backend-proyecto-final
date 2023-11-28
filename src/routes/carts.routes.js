@@ -1,15 +1,16 @@
 import { Router } from "express";
-import { cartsController } from "../controllers/carts.controller.js";
- 
+import { CartsController } from "../controllers/carts.controller.js";
+ import { isAuth,checkRole } from "../middlewares/auth.js";
 const router = Router();
 
-router.get("/", cartsController.getCarts)
-router.get("/:cid", cartsController.getCartById);
-router.post("/", cartsController.createCarts);
-router.put("/:cid/product/:pid", cartsController.addProductById);
-router.put("/:cid/products/:pid", cartsController.addQuantity);//agrego en body mas quantity
-router.delete("/:cid/products/:pid", cartsController.deleteProducts);
-router.delete("/:cid", cartsController.deleteCartById);
+router.get("/", CartsController.getCarts)
+router.get("/:cid", CartsController.getCartById);
+router.post("/", CartsController.createCarts);
+router.put("/:cid/product/:pid", isAuth, checkRole(['user']),  CartsController.addProductById);
+router.put("/:cid/products/:pid", isAuth, checkRole(['user']), CartsController.addQuantity);//agrego en body mas quantity
+router.delete("/:cid/products/:pid", CartsController.deleteProducts);
+router.delete("/:cid", CartsController.deleteCartById);
+router.post('/cid/purchase', CartsController.purchaseCart);
 
 export { router as cartsRouter };
 

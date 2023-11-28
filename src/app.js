@@ -7,6 +7,7 @@ import path from 'path'
 import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
 import { ProductsService } from "./services/products.service.js";
+import { CartsService } from "./services/carts.service.js";
 import { connectDB } from "./config/dbConnection.js";
 import chatRouter from "./routes/chat.routes.js";
 import { productsModel } from "./dao/mongo/models/products.model.js";
@@ -48,12 +49,13 @@ app.use(express.urlencoded({ extended: true }));  //me permite recibir inputs de
 // });
 
 //configuracion del motor de plantillas handlebars
-app.engine('.hbs', engine({ extname: '.hbs'
-//esto es la otra opcion a poner .lean() para obtener los productos del carrito)
-// , runtimeOptions: { 
-//     allowProtoMethodsByDefault: true,
-//     allowProtoPropertiesByDefault: true,
-// },
+app.engine('.hbs', engine({
+    extname: '.hbs'
+    //esto es la otra opcion a poner .lean() para obtener los productos del carrito)
+    // , runtimeOptions: { 
+    //     allowProtoMethodsByDefault: true,
+    //     allowProtoPropertiesByDefault: true,
+    // },
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, './views'));
@@ -61,13 +63,13 @@ app.set('views', path.join(__dirname, './views'));
 
 //session
 app.use(session({
-    store:MongoStore.create({
-        ttl:3000,
-        mongoUrl:config.mongo.url
+    store: MongoStore.create({
+        ttl: 3000,
+        mongoUrl: config.mongo.url
     }),
-    secret:config.server.secretSession,
-    resave:true,
-    saveUninitialized:true
+    secret: config.server.secretSession,
+    resave: true,
+    saveUninitialized: true
 }))
 
 //configurar passport
@@ -96,8 +98,8 @@ io.on('connection', async (socket) => {
     const products = await ProductsService.getProducts();
     socket.emit('productsArray', products)
 
-     //recibir lo enviado por el socket del cliente
-     socket.on("addProduct", async (productData) => {
+    //recibir lo enviado por el socket del cliente
+    socket.on("addProduct", async (productData) => {
 
         const result = await ProductsService.createProduct(productData);
         const products = await ProductsService.getProducts();
@@ -114,7 +116,24 @@ io.on('connection', async (socket) => {
             console.error('Error al eliminar un producto:', error.message);
         }
     });
+    // Enviar la información del carrito al cliente al conectarse
+    const cartId = '6526e7dea74bed07729fdca3'; // Asegúrate de tener el cartId correcto aquí
+    const cartProducts = await CartsService.getCartById(cartId);
+    socket.emit('cartUpdated', cartProducts);
+
+    // Manejar la solicitud para eliminar un producto del carrito
+    socket.on('deleteFromCart', async (productId) => {
+        try {
+            const cartId = '6526e7dea74bed07729fdca3'; // Asegúrate de tener el cartId correcto aquí
+            await CartsService.deleteProduct(cartId, productId);
+            const updatedCart = await CartsService.getCartById(cartId);
+            io.emit('cartUpdated', updatedCart);
+        } catch (error) {
+            console.error('Error al eliminar un producto del carrito:', error.message);
+        }
+    });
 });
+
 
 // conexion base de datos
 connectDB();

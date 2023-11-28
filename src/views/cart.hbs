@@ -1,17 +1,18 @@
 <h1>Productos en el Carrito</h1>
  
-<ul>
+{{!-- <ul id="cartListfixed">
     {{#each products}}
-        <li>
+        <li id="cartItem_{{this.productId._id}}">
             <h3>{{this.productId.title}}</h3>
             <p>Descripción: {{this.productId.description}}</p>
             <p>Precio: ${{this.productId.price}}</p>
             <p>Cantidad: {{this.quantity}}</p>
-            <button  onclick="deleteProduct(`{{this.productId._id}}`)">Eliminar del carrito</button>
+            <button onclick="deleteProduct('{{this.productId._id}}')">Eliminar del carrito</button>
         </li>
-        
     {{/each}}
-        
-</ul> 
+</ul> --}}
+<p>Cart:</p>
+<div id="cartList"></div>
 
+<script src="socket.io/socket.io.js"></script>
 <script src="/static/js/cart.js"></script>

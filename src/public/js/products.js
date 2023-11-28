@@ -1,5 +1,7 @@
+
 const addToCart = async (productId) => {
-    let cartId = '6526e7dea74bed07729fdca3'; // Debes obtener el cartId de alguna manera, no debería estar hardcodeado
+    let cartId = '6526e7dea74bed07729fdca3'; 
+    console.log(productId)
     if (!cartId) {
         console.log('No hay un carrito existente.');
         return;
