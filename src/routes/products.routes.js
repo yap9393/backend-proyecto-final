@@ -14,6 +14,7 @@ router.put("/:pid", isAuth, checkRole(['admin']), ProductsController.updateProdu
 
 router.delete("/:pid", isAuth, checkRole(['admin']),  ProductsController.deleteProductById);
 
+
 export { router as productsRouter };
 
 

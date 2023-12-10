@@ -18,4 +18,7 @@ router.get('/login', viewsController.loginView);
 
 router.get('/signup', viewsController.signUpView);
 
+//mocking
+router.get('/mokingProducts', viewsController.mockingProducts)
+
 export { router as viewsRouter }
