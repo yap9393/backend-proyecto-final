@@ -2,7 +2,6 @@ const loginForm = document.getElementById("loginForm");
 
 loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
-    console.log(e.target)
     // const info = {
     //     name:e.target.name.value,
     //     email:e.target.email.value

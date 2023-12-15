@@ -20,7 +20,6 @@ router.get("/github-callback", passport.authenticate("signupGithubStrategy", {
     failureRedirect: "/api/sessions/fail-signup"
 }), (req, res) => {
     res.redirect("/profile");
-    console.log(config.github.callbackUrl)
 }); 
 
 router.post("/login", passport.authenticate("loginLocalStrategy",{

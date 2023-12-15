@@ -1,5 +1,5 @@
 import { TicketService } from "../service/ticket.service.js"
-
+import { logger } from "../helpers/loggers.js";
 
 export class TicketController {
     
@@ -21,7 +21,8 @@ export class TicketController {
             res.json({ message: "Listado de tickets", data: ticket });
             
         } catch (error) {
-            console.log('error getTicket controller', error.message);
+            // console.log('error getTicket controller', error.message);
+            logger.error('error getTicket controller', error.message);
             res.json({ status: "error", message: error.message });
         }
     }
@@ -33,7 +34,7 @@ export class TicketController {
             res.json({ message: "Listado de tickets", data: ticket });
             
         } catch (error) {
-            console.log('error getTicketById controller', error.message);
+            logger.error('error getTicketById controller', error.message);
             res.json({ status: "error", message: error.message });
         }
     }

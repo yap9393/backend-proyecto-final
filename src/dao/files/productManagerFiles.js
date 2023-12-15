@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { logger } from '../../helpers/loggers.js';
 
 export  class ProductsManagerFiles {
     constructor(path) {
@@ -67,7 +68,7 @@ export  class ProductsManagerFiles {
          }
           
         } catch (error) {
-         
+            logger.error('Error al obtener productos');
         }
      }
      async getProductById(id) {
@@ -76,9 +77,10 @@ export  class ProductsManagerFiles {
         if (product) {
             return product;
         } else {
-            console.log('Producto no encontrado.');
+            logger.info('Producto no encontrado');
         } 
         } catch (error) {
+            logger.error('Error al obtener producto por Id');
             throw error;
         }
         //en el after del 9-06 muestra como hacer esta funcion asincrona 
@@ -117,7 +119,7 @@ export  class ProductsManagerFiles {
             await this.saveProducts();
             console.log("Producto actualizado:", this.products[productIndex]);
         } else {
-            console.log('Producto no encontrado.');
+            logger.info('Producto no encontrado ');
         }
     }
 
@@ -129,7 +131,7 @@ export  class ProductsManagerFiles {
             await this.saveProducts();
             console.log("Producto eliminado:", deletedProduct);
         } else {
-            console.log('Producto no encontrado.');
+            logger.info('Producto no encontrado ');
         }
     }
 

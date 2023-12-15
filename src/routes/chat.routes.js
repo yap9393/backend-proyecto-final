@@ -1,5 +1,6 @@
 import express from "express";
 import { chatService } from "../dao/index.js";
+import { logger } from "../helpers/loggers.js";
 
 const chatRouter = express.Router();
  
@@ -10,7 +11,7 @@ chatRouter.post('/addMessage', async (req, res) => {
         const result = await chatService.addMessage(messageInfo);
         res.status(201).json(result);
     } catch (error) {
-        console.error(error);
+        logger.error('Error al agregar el mensaje:', error);
         res.status(500).json({ error: 'Error al agregar el mensaje.' });
     }
 });

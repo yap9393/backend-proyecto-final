@@ -2,6 +2,7 @@
 import { ProductsService } from "../services/products.service.js";
 import { CartsService } from "../services/carts.service.js";
 import { generateProduct } from "../helpers/mock.js";
+import { logger } from "../helpers/loggers.js";
 
 export class viewsController{
     static view= async (req, res) => {
@@ -61,7 +62,7 @@ export class viewsController{
             }
             res.render('cart', { products: cart.products });
         } catch (error) {
-            console.error(error);
+            logger.error(error)
             return res.status(500).send('Error al obtener el carrito');
         }
     }
@@ -96,7 +97,7 @@ export class viewsController{
             }
             res.json({status: "success", data: products})
         } catch (error) {
-            console.log('error mockingProducts controller', error.message);
+            logger.error('error mockingProducts controller', error.message);
             res.json( { status: "error", message: error.message });
         }
     }

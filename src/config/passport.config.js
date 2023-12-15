@@ -5,6 +5,7 @@ import { usersModel } from '../dao/mongo/models/users.model.js';
 import { config } from './config.js';
 import GithubStrategy from "passport-github2"
 import { usersService } from '../dao/index.js';
+import { logger } from '../helpers/loggers.js';
 
 //localStrategy: username y password
 export const initializePassport = ()=>{
@@ -34,6 +35,7 @@ export const initializePassport = ()=>{
                 const userCreated = await usersService.createUser(newUser);
                 return done(null,userCreated);
             } catch (error) {
+                logger.error(error)
                 return done(error);
             }
         }
@@ -57,6 +59,7 @@ export const initializePassport = ()=>{
                 //validamos que el usuario esta registrado y que la contrase;a es correcta
                 return done(null,user);
             } catch (error) {
+                logger.error(error)
                 return done(error);
             }
         }
@@ -88,6 +91,7 @@ export const initializePassport = ()=>{
                 const userCreated = await usersModel.create(newUser);
                 return done(null,userCreated);
             } catch (error) {
+                logger.error(error)
                 return done(error)
             }
         }

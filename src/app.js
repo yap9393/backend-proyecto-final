@@ -20,6 +20,9 @@ import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { config } from "./config/config.js";
 import { generateToken, validateToken } from "./utils.js";
+import { logger } from "./helpers/loggers.js";
+
+// import { logger } from "./helpers/logger.js";
 // import { chatService } from "./dao/index.js";
 
 import mongoose from "mongoose";
@@ -28,7 +31,22 @@ const port = 8080;
 const app = express()
 
 //servidor
-const httpServer = app.listen(port, () => console.log(`servidor ejecutandose en el puerto ${port}`))
+const httpServer = app.listen(port, () => {
+    logger.info(`Server listening on port ${port}`);
+  });
+
+  app.get("/loggerTest", (req, res) => {
+    logger.debug("Este es un mensaje de debug");
+    logger.http("Este es un mensaje http");
+    logger.info("Este es un mensaje de info");
+    logger.warning("Este es un mensaje de advertencia");
+    logger.error("Este es un mensaje de error");
+    logger.fatal("Este es un mensaje fatal");
+  
+    res.send("Prueba de logs realizada");
+  });
+  
+  
 
 //middlewares
 app.use(express.json()); //  convertir lo del body a json, tb conocido como middleware de aplicacion, se ejcuta en toda mi aplicacion.
@@ -94,7 +112,7 @@ app.use('/api/sessions', sessionsRouter)
 
 //socket server
 io.on('connection', async (socket) => {
-    console.log('cliente conectado');
+    logger.info('Cliente conectado')
     const products = await ProductsService.getProducts();
     socket.emit('productsArray', products)
 
@@ -113,7 +131,7 @@ io.on('connection', async (socket) => {
             const updatedProducts = await ProductsService.getProducts();
             socket.emit('productsArray', updatedProducts);
         } catch (error) {
-            console.error('Error al eliminar un producto:', error.message);
+            logger.error('Error al eliminar un producto:', error.message);
         }
     });
     // Enviar la información del carrito al cliente al conectarse
@@ -130,9 +148,11 @@ io.on('connection', async (socket) => {
             io.emit('cartUpdated', updatedCart);
         } catch (error) {
             console.error('Error al eliminar un producto del carrito:', error.message);
+            logger.error('Error al eliminar un producto del carrito:', error.message);
         }
     });
 });
+
 
 
 // conexion base de datos
