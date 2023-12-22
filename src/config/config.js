@@ -15,5 +15,10 @@ export const config = {
     },
     environment:{
         nodeEnv: process.env.NODE_ENV
+    },
+    gmail:{
+        account: process.env.ADMIN_EMAIL,
+        password: process.env.ADMIN_PASS,
+        token:process.env.TOKEN_EMAIL
     }
 };

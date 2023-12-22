@@ -4,7 +4,7 @@ import { createHash, inValidPassword } from '../utils.js';
 import { usersModel } from '../dao/mongo/models/users.model.js';
 import { config } from './config.js';
 import GithubStrategy from "passport-github2"
-import { usersService } from '../dao/index.js';
+import { usersDao } from '../dao/index.js';
 import { logger } from '../helpers/loggers.js';
 
 //localStrategy: username y password
@@ -18,7 +18,7 @@ export const initializePassport = ()=>{
         async (req,username,password,done)=>{
             const {first_name, last_name, age} = req.body;
             try {
-                const user = await usersService.getUserByEmail(username);
+                const user = await usersDao.getUserByEmail(username);
                 if(user){
                     //el usuario ya esta registrado
                     return done(null,false);
@@ -32,7 +32,7 @@ export const initializePassport = ()=>{
                     password:createHash(password)
                 };
                 console.log(newUser);
-                const userCreated = await usersService.createUser(newUser);
+                const userCreated = await usersDao.createUser(newUser);
                 return done(null,userCreated);
             } catch (error) {
                 logger.error(error)
@@ -48,7 +48,7 @@ export const initializePassport = ()=>{
         },
         async (username,password,done)=>{
             try {
-                const user = await usersService.getUserByEmail(username);
+                const user = await usersDao.getUserByEmail(username);
                 if(!user){
                     //el usuario no esta registrado
                     return done(null,false);
@@ -71,7 +71,8 @@ export const initializePassport = ()=>{
             clientID: config.github.clientId,
             clientSecret: config.github.clientSecret,
             // callbackUrl:"http://localhost:8080/api/sessions/github-callback"
-            callbackUrl: `http://localhost:8080/api/sessions${config.github.callbackUrl}`
+            callbackURL: `http://localhost:8080/api/sessions${config.github.callbackUrl}`
+
         },
         async(accessToken,refreshToken,profile,done)=>{
             try {
@@ -102,7 +103,7 @@ export const initializePassport = ()=>{
     });
 
     passport.deserializeUser(async(id,done)=>{
-        const user = await usersService.getUserById(id);
+        const user = await usersDao.getUserById(id);
         done(null,user);//req.user = informacion del usuario que traemos de la base de datos
     });
 };

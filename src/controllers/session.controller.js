@@ -2,6 +2,9 @@
 import passport from "passport";
 import { config } from "../config/config.js";
  import { ProductsService } from "../services/products.service.js";
+ import { UsersService } from "../services/users.service.js";
+ import { generateEmailToken, sendChangePasswordEmail, verifyEmailToken } from "../helpers/email.js";
+ import { createHash, inValidPassword } from "../utils.js";
  
 export class SessionController {
     static signUp = passport.authenticate("signupLocalStrategy", {
@@ -41,6 +44,21 @@ export class SessionController {
             });
         } catch (error) {
             res.render("signupView", { error: "No se pudo registrar el usuario" });
+        }
+    };
+
+    static forgotPassword = async(req,res)=>{
+        const {email} = req.body;
+        console.log(email);
+        try {
+            //Veificar que el usuario exista
+            const user  = await UsersService.getUserByEmail(email);
+            // console.log(user);
+            const emailToken = generateEmailToken(email, 10 * 60)//5min
+            await sendChangePasswordEmail(req,email,emailToken);
+            res.send(`Se envio un enlace a su correo, <a href="/">Volver a la pagina de login</a>`);
+        } catch (error) {
+            res.json({status:"error", message:error.message});
         }
     };
 }

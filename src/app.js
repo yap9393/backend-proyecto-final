@@ -52,9 +52,10 @@ const httpServer = app.listen(port, () => {
 app.use(express.json()); //  convertir lo del body a json, tb conocido como middleware de aplicacion, se ejcuta en toda mi aplicacion.
 app.use(express.urlencoded({ extended: true }));  //me permite recibir inputs de formularios y q los comprenda como json
 // app.use(cookieParser('claveCookies')) //cookies
-
+app.use(cookieParser('clave_secreta'));
 
 //jsntoken
+
 
 // app.get("/login", (req,res)=>{
 //     const user = req.body;
@@ -85,7 +86,7 @@ app.use(session({
         ttl: 3000,
         mongoUrl: config.mongo.url
     }),
-    secret: config.server.secretSession,
+    secret: 'clave_secreta',
     resave: true,
     saveUninitialized: true
 }))

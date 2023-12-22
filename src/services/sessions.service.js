@@ -1,15 +1,15 @@
-import { usersService } from "../dao/index.js";
+import { usersDao } from "../dao/index.js";
 
 export class UserSessionService{
     static createUser = (userInfo)=> {
-     return usersService.createUser();
+     return usersDao.createUser();
     };
     static getUserById = (userId) =>{
-       return usersService.getUserById(userId)
+       return usersDao.getUserById(userId)
     };
 
     static getUserByEmail = (userEmail)=> {
-      return usersService.getUserByEmail(userEmail)
+      return usersDao.getUserByEmail(userEmail)
     };
 
 }

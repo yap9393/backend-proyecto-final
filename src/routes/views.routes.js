@@ -21,4 +21,8 @@ router.get('/signup', viewsController.signUpView);
 //mocking
 router.get('/mokingProducts', viewsController.mockingProducts)
 
+router.get("/forgot-password", (req,res)=>{
+    res.render("forgotPassView");
+});
+
 export { router as viewsRouter }

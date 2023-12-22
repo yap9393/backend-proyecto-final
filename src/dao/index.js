@@ -14,5 +14,5 @@ import { TicketManagerMongo } from "./mongo/ticketModel.js";
 export const productsDao = new ProductsManagerMongo();
 export const cartsDao = new CartsManagerMongo();
 export const chatService= new ChatManagerMongo();
-export const usersService= new usersManagerMongo();
+export const usersDao= new usersManagerMongo();
 export const ticketDao = new TicketManagerMongo()

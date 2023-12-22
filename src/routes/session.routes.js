@@ -31,6 +31,8 @@ router.get("/fail-login", SessionController.failLogin);
 
 router.get("/logout", SessionController.logout);
 
+router.post("/forgot-password", SessionController.forgotPassword);
+
 export { router as sessionsRouter };
 
 
