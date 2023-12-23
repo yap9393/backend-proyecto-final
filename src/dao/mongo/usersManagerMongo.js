@@ -29,11 +29,20 @@ export class usersManagerMongo {
 
     async getUserByEmail(userEmail) {
         try {
-            const result = await this.model.findOne({ email: userEmail });
+            const result = await this.model.findOne({ email: userEmail }).lean();
             return result;
         } catch (error) {
             logger.error('getUserByEmail: ', error.message);
             throw new Error('Se produjo un error obteniendo el usuario');
         }
     }
+    async updateUser(id, user){
+        try {
+            const result = await this.model.findByIdAndUpdate(id, user, {new:true});
+            return result;
+        } catch (error) {
+            console.log("updateUser: ", error.message);
+            throw new Error("Se produjo un error actualizando el usuario");
+        }
+    };
 }

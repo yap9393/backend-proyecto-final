@@ -33,6 +33,8 @@ router.get("/logout", SessionController.logout);
 
 router.post("/forgot-password", SessionController.forgotPassword);
 
+router.post("/reset-password", SessionController.resetPassword);
+
 export { router as sessionsRouter };
 
 

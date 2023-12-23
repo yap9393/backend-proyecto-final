@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { transporter } from "../config/email.js";
 
 export const generateEmailToken = (email,expireTime)=>{
-    const token = jwt.sign({email},config.gmail.secretToken,{expiresIn:expireTime});
+    const token = jwt.sign({email},config.gmail.token,{expiresIn:expireTime});
     return token;
 };
 
@@ -32,7 +32,7 @@ export const sendChangePasswordEmail = async(req,userEmail,token)=>{
 
 export const verifyEmailToken = (token)=>{
     try {
-        const info = jwt.verify(token,config.gmail.secretToken);
+        const info = jwt.verify(token,config.gmail.token);
         return info.email;
     } catch (error) {
         console.log(error.message);

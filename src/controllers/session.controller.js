@@ -61,4 +61,33 @@ export class SessionController {
             res.json({status:"error", message:error.message});
         }
     };
+
+    static resetPassword = async(req,res)=>{
+        try {
+            const token = req.query.token;
+            const {newPassword} = req.body;
+            const validEmail = verifyEmailToken(token);
+            if(!validEmail){
+                return res.send(`El enlace ya no es valido, genera un nuevo <a href="/forgot-password">enlace</a>`);
+            }
+            const user = await UsersService.getUserByEmail(validEmail);
+            console.log("user", user);
+            if(!user){
+                return res.send(`Esta operacion no es valida`);
+            }
+            if(inValidPassword(newPassword,user)){
+                return res.render("resetPassView", {error:"contraseña invalida", token});
+            }
+            const userData = {
+                ...user,
+                password: createHash(newPassword)
+            };
+            // console.log("userData", userData);
+            await UsersService.updateUser(user._id, userData);
+            res.render("loginView",{message:"Contraseña actualizada"});
+        } catch (error) {
+            res.json({status:"error", message:error.message});
+        }
+    };
+
 }
