@@ -15,6 +15,7 @@
     "@faker-js/faker": "^7.6.0",
     "bars": "^1.9.6",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",

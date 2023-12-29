@@ -7,9 +7,26 @@ import { config } from "../config/config.js";
  import { createHash, inValidPassword } from "../utils.js";
  
 export class SessionController {
-    static signUp = passport.authenticate("signupLocalStrategy", {
-        failureRedirect: "/api/sessions/fail-signup"
-    });
+    static signUp = (req, res, next) => {
+        passport.authenticate("signupLocalStrategy", (err, user, info) => {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.render("signupView", { error: "No se pudo registrar el usuario" });
+            }
+    
+            // El usuario logea in una vez creado exitosamente
+            req.logIn(user, (loginErr) => {
+                if (loginErr) {
+                    return next(loginErr);
+                }
+                // redirigo al perfil del usuario
+                return res.redirect("/profile");
+            });
+        })(req, res, next);
+    };
+    
     
     static failSignUp = (req, res) => {
         res.render("signupView", { error: "No se pudo registrar el usuario" });

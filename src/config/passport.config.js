@@ -18,6 +18,7 @@ export const initializePassport = ()=>{
         async (req,username,password,done)=>{
             const {first_name, last_name, age} = req.body;
             try {
+                console.log('Attempting to sign up user:', username);
                 const user = await usersDao.getUserByEmail(username);
                 if(user){
                     //el usuario ya esta registrado
@@ -33,7 +34,18 @@ export const initializePassport = ()=>{
                 };
                 console.log(newUser);
                 const userCreated = await usersDao.createUser(newUser);
-                return done(null,userCreated);
+                if (!userCreated) {
+                    return done(null, false, { message: 'Failed to create user.' });
+                }
+                
+                // Log in the user using loginLocalStrategy
+                req.login(userCreated, (err) => {
+                    if (err) {
+                        logger.error(err);
+                        return done(err);
+                    }
+                    return done(null, userCreated);
+                });
             } catch (error) {
                 logger.error(error)
                 return done(error);

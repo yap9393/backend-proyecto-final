@@ -22,6 +22,7 @@ import { config } from "./config/config.js";
 import { generateToken, validateToken } from "./utils.js";
 import { logger } from "./helpers/loggers.js";
 
+
 // import { logger } from "./helpers/logger.js";
 // import { chatService } from "./dao/index.js";
 
@@ -53,6 +54,8 @@ app.use(express.json()); //  convertir lo del body a json, tb conocido como midd
 app.use(express.urlencoded({ extended: true }));  //me permite recibir inputs de formularios y q los comprenda como json
 // app.use(cookieParser('claveCookies')) //cookies
 app.use(cookieParser('clave_secreta'));
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 //jsntoken
 

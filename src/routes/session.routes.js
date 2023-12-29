@@ -6,8 +6,9 @@ import { config } from "../config/config.js";
 import { SessionController } from "../controllers/session.controller.js";
 
 const router = Router(); 
-
+ 
 router.post("/signup", SessionController.signUp);
+
 
 router.get("/fail-signup", SessionController.failSignUp);
  
