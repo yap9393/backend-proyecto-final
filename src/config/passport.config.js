@@ -68,7 +68,7 @@ export const initializePassport = ()=>{
                 if(!inValidPassword(password,user)){
                     return done(null,false);
                 }
-                //validamos que el usuario esta registrado y que la contrase;a es correcta
+                //validamos que el usuario esta registrado y que la contrasea es correcta
                 return done(null,user);
             } catch (error) {
                 logger.error(error)

@@ -36,10 +36,25 @@ export class ProductsController {
             res.status(500).json({ error: errorMessage });
         }
     }
+    // static createProduct = async(req,res, next)=>{
+    //     try {
+    //         // console.log(req.user);
+    //         const productInfo = req.body;
+    //         productInfo.owner = req.user._id;
+    //         const result = await ProductsService.createProduct(productInfo);
+    //         res.json({status:"success",result});
+    //     } catch (error) {
+    //         // res.json({status:"error", message:error.message});
+    //         next(error);
+    //     } finally {
+
+    //     }
+    // };
 
     static createProduct = async (req, res) => {
         try {
             const product = req.body;
+            product.owner=req.user._id;
             const result = await ProductsService.createProduct(product);
             res.json({ status: 'success', data: result });
         } catch (error) {

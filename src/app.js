@@ -21,7 +21,8 @@ import { initializePassport } from "./config/passport.config.js";
 import { config } from "./config/config.js";
 import { generateToken, validateToken } from "./utils.js";
 import { logger } from "./helpers/loggers.js";
-
+import { swaggerSpecs } from "./config/swagger.config.js";
+import swaggerUI from 'swagger-ui-express';
 
 // import { logger } from "./helpers/logger.js";
 // import { chatService } from "./dao/index.js";
@@ -105,6 +106,7 @@ const io = new Server(httpServer)
 //carpeta public 
 app.use('/static', express.static(path.join(__dirname, '/public')))
 
+app.use('/api/docs', swaggerUI.serve,  swaggerUI.setup(swaggerSpecs))
 
 //rutas
 app.use(viewsRouter)
